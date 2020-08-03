@@ -1,0 +1,6 @@
+{
+    "name": "Online-Offline Budget Tracker App",
+    "short_name": "Budget Tracker",
+    "start_url": "/",
+    "display": "standalone"
+}
