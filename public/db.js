@@ -12,7 +12,7 @@ request.onupgradeneeded = function(event) {
 };
 
 request.onsuccess = function(event) {
-  db = target.result;
+  db = event.target.result;
 
   if (navigator.onLine) {
     checkDatabase();
@@ -27,25 +27,19 @@ function saveRecord(record) {
   // create a transaction on the pending db with readwrite access
   // access your pending object store
   // add record to your store with add method.
-  const transaction = db.transaction(["budget"], "readwrite");
-  const budgetStore = transaction.ObjectStore("budget");
+  const transaction = db.transaction(["pending"], "readwrite");
+  const store = transaction.objectStore("pending");
 
-  budgetStore.add({});
+  store.add(record);
 }
 
 function checkDatabase() {
   // open a transaction on your pending db
   // access your pending object store
   // get all records from store and set to a variable
-  const getCursorRequest = budgetStore.openCursor();
-  getCursorRequest.on.success = e => {
-    const cursor = e.target.result;
-    // if (cursor) {
-    //   if 
-    // };
-
-  }
-
+  const transaction = db.transaction(["pending"], "readwrite");
+  const store = transaction.objectStore("pending");
+  const getAll = store.getAll();
 
   getAll.onsuccess = function() {
     if (getAll.result.length > 0) {
@@ -59,9 +53,9 @@ function checkDatabase() {
       })
       .then(response => response.json())
       .then(() => {
-          // if successful, open a transaction on your pending db
-          // access your pending object store
-          // clear all items in your store
+          const transaction = db.transaction(["pending"], "readwrite");
+          const store = transaction.objectStore("pending");
+          store.clear();
       });
     }
   };
