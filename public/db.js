@@ -1,10 +1,13 @@
-let request = window.indexedDB.open("budget", 1);
+let db; 
+
 // create a new db request for a "budget" database.
+let request = indexedDB.open("budget", 1);
+
 
 request.onupgradeneeded = function(event) {
   const db = event.target.result;
   // create object store called "pending" and set autoIncrement to true
-  const budgetStore= db.ObjectStore("pending", {autoIncrement: true});
+  const budgetStore= db.createObjectStore("pending", {autoIncrement: true});
 
 };
 
@@ -17,7 +20,7 @@ request.onsuccess = function(event) {
 };
 
 request.onerror = function(event) {
-  // log error here
+  console.log("Error: event target", event.target.errorCode);
 };
 
 function saveRecord(record) {
@@ -28,9 +31,6 @@ function saveRecord(record) {
   const budgetStore = transaction.ObjectStore("budget");
 
   budgetStore.add({});
-  budgetStore.add({});
-  budgetStore.add({});
-
 }
 
 function checkDatabase() {
